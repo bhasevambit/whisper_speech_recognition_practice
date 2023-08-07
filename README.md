@@ -20,5 +20,5 @@ pip requirements install command is below.
 
 - This repository is used direnv.
 
-    - Please install `direnv` and execute `direnv allow` commands at Repository Top directory.
+  - Please install `direnv` and execute `direnv allow` commands at Repository Top directory.
     (If you use Windows, please execute `.\.venv\Scripts\activate` commnads)
