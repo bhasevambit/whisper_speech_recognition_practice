@@ -18,9 +18,17 @@ from srt import Subtitle
 # medium |  769 M 	  |   medium.en  |	  medium 	  |     ~5 GB 	  |    ~2x
 # large  |  1550 M 	  |   N/A 	     |    large 	  |     ~10 GB 	  |     1x
 
-filepath = "C:\\Users\\*省略*\\test.m4a"  # ファイル指定。
+
+dirname = "C:\\Users\\jammi\\VScode_Local_GARAGE\\GitHub_Local\\whisper_speech_recognition_training\\wav\\"
+filename = "recorded-sound_20230807_205455.wav"
+
+filepath = dirname + filename  # ファイル指定
+print("filepath = ", filepath)
+
 lang = "ja"  # 音声ファイルの言語（ja=日本語）
 basename = os.path.splitext(os.path.basename(filepath))[0]  # 音声ファイルの名前（拡張子なし）
+print("basename = ", basename)
+
 model = whisper.load_model("small")  # モデルサイズの指定(上の表参照）
 
 # audioファイルを読み込む
@@ -71,7 +79,7 @@ with open(f"{basename}.srt", mode="w", encoding="utf-8") as f:
 
 # SRTファイルから必要な情報だけ取り出してtxtファイルで保存する
 subrip = pysrt.open(f"{basename}.srt")
-f_out = open(f"{basename}.txt", mode="w", encoding="utf-8")
+f_out = open(f"{basename}_speech_recognitioned.txt", mode="w", encoding="utf-8")
 
 # テキスト（IDとタイムスタンプ無し）
 for sub in subrip:

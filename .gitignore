@@ -1,3 +1,11 @@
+# User files
+wav/
+wav/*
+*.wav
+*.m4a
+*.srt
+*_speech_recognitioned.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
