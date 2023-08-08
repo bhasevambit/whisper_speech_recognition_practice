@@ -6,6 +6,9 @@ wav/*
 *.srt
 *_speech_recognitioned.txt
 
+# User modules
+pyaudio_audio_signal_processing_training
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
