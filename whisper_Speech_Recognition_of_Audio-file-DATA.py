@@ -1,8 +1,8 @@
 import torch
 import whisper
-from modules.pyaudio_audio_signal_processing_training.modules.get_std_input import \
-    get_strings_by_std_input
 from modules.save_file import save_recognition_result_to_srt_and_txt_file
+from submodules.pyaudio_audio_signal_processing_training.modules.get_std_input import \
+    get_strings_by_std_input
 
 if __name__ == '__main__':
     # =================
