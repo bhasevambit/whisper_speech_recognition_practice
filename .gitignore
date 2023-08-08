@@ -3,8 +3,10 @@ wav/
 wav/*
 *.wav
 *.m4a
+result/
+result/*
 *.srt
-*_speech_recognitioned.txt
+speech_recognition_*.txt
 
 # User modules
 pyaudio_audio_signal_processing_training

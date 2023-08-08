@@ -21,6 +21,12 @@ pip requirements install command is below.
 Please install whisper Library according to setup procedure below link.
 <https://github.com/openai/whisper#setup>
 
+## Local modules
+
+Please git clone at `./modules` below repositories.
+
+- <https://github.com/bhasevambit/pyaudio_audio_signal_processing_training>
+
 ## Note
 
 - This repository is used direnv.

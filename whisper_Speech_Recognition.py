@@ -1,14 +1,10 @@
-import os  # ファイル操作用
-# 音声認識のresult[segments]を扱うのに便利なSRTのモジュールをインポートします
-from datetime import timedelta
+import os
 
-import pysrt
-import srt
-# import torch
+import torch
 import whisper
 from modules.pyaudio_audio_signal_processing_training.modules.get_std_input import \
     get_strings_by_std_input
-from srt import Subtitle
+from modules.save_file import save_recognition_result_to_srt_and_txt_file
 
 if __name__ == '__main__':
     # =================
@@ -16,14 +12,7 @@ if __name__ == '__main__':
     # =================
 
     # CPUで処理させる場合は，このコメントアウトを外す
-    # torch.cuda.is_available = lambda: False
-
-    # Size 	 | Parameters | English-only | Multilingual | Required VRAM | Relative speed
-    # tiny 	 |  39 M 	  |   tiny.en 	 |    tiny 	    |     ~1 GB 	|    ~32x
-    # base 	 |  74 M 	  |   base.en 	 |    base 	    |     ~1 GB 	|    ~16x
-    # small  |  244 M 	  |   small.en 	 |    small 	|     ~2 GB 	|    ~6x
-    # medium |  769 M 	  |   medium.en  |	  medium 	|     ~5 GB 	|    ~2x
-    # large  |  1550 M 	  |   N/A 	     |    large 	|     ~10 GB 	|     1x
+    torch.cuda.is_available = lambda: False
 
     # 分析対象の音声データファイルの指定
     # (標準入力にて指定可能とする)
@@ -34,72 +23,79 @@ if __name__ == '__main__':
     print("")
     filepath = get_strings_by_std_input()
 
-    print("filepath = ", filepath)
-
     lang = "ja"  # 音声ファイルの言語（ja=日本語）
     basename = os.path.splitext(os.path.basename(filepath))[0]  # 音声ファイルの名前（拡張子なし）
+
+    print("")
+    print("filepath = ", filepath)
     print("basename = ", basename)
+    print("")
 
-    model = whisper.load_model("small")  # モデルサイズの指定(上の表参照）
+    # === モデルサイズの指定 ===
+    # -----------------------------------------------------------------------------------
+    # Size 	 | Parameters | English-only | Multilingual | Required VRAM | Relative speed
+    # tiny 	 |  39 M 	  |   tiny.en 	 |    tiny 	    |     ~1 GB 	|    ~32x
+    # base 	 |  74 M 	  |   base.en 	 |    base 	    |     ~1 GB 	|    ~16x
+    # small  |  244 M 	  |   small.en 	 |    small 	|     ~2 GB 	|    ~6x
+    # medium |  769 M 	  |   medium.en  |	  medium 	|     ~5 GB 	|    ~2x
+    # large  |  1550 M 	  |   N/A 	     |    large 	|     ~10 GB 	|     1x
+    # -----------------------------------------------------------------------------------
+    model = whisper.load_model("small")
 
-    # audioファイルを読み込む
+    # === Audioデータファイルの読み込み ===
     audio = whisper.load_audio(file=filepath)
 
-    # 音声認識
+    # === 音声認識の実行 ===
     result = model.transcribe(audio, verbose=True, language=lang)
 
-    # 結果の出力はtextかsegments。今回はタイムスタンプにも対応可能なようにsegmentsを使う
+    # === 音声認識結果出力 ===
+    # (出力は"text"か"segments"を選択可能)
+    # (タイムスタンプにも対応可能なようにsegmentsを使用)
     segments = result["segments"]
 
-    # resultの中身
-    # {'language': 'ja',
-    #  'segments': [{
-    #     "id": len(all_segments),←取り出すやつ
-    #     "seek": seek,
-    #     "start": start,　←タイムスタンプ：開始時間
-    #     "end": end,　←タイムスタンプ：終了時間
-    #     "text": text,　←テキスト
-    #     "tokens": result.tokens,
-    #     "temperature": result.temperature,　
-    #     "avg_logprob": result.avg_logprob,
-    #     "compression_ratio": result.compression_ratio,
-    #     "no_speech_prob": result.no_speech_prob,
-    # },
-    #  'text': '********'}
+    # 標準出力として、id毎に改行して表示
+    print("")
+    print("--- Speech Recognition Results ---")
+    for seg in result["segments"]:
+        id, start, end, text = [seg[key] for key in ["id", "start", "end", "text"]]
+        print(f"{id:03}: {start:5.1f} - {end:5.1f} | {text}")
+    print("----------------------------------")
 
-    subs = []
-    for data in segments:  # segmentsの中から、id, start, end, textを取り出していく。
-        index = data["id"] + 1
-        start = data["start"]
-        end = data["end"]
-        text = data["text"]
+    # # segmentsの中から、id, start, end, textを取得
+    # subs = []
+    # for data in segments:
+    #     # index = data["id"] + 1
+    #     start = data["start"]
+    #     end = data["end"]
+    #     text = data["text"]
 
-        sub = Subtitle(  # SRTモジュールのSubtitle関数を使って、情報を格納していく
-            index=1,
-            start=timedelta(
-                seconds=timedelta(
-                    seconds=start).seconds, microseconds=timedelta(
-                    seconds=start).microseconds),
-            end=timedelta(seconds=timedelta(seconds=end).seconds, microseconds=timedelta(seconds=end).microseconds),
-            content=text,
-            proprietary=''
-        )
+    #     # SRTモジュールのSubtitle関数を用いて情報を格納
+    #     sub = Subtitle(
+    #         index=1,
+    #         start=timedelta(
+    #             seconds=timedelta(
+    #                 seconds=start).seconds, microseconds=timedelta(
+    #                 seconds=start).microseconds),
+    #         end=timedelta(seconds=timedelta(seconds=end).seconds, microseconds=timedelta(seconds=end).microseconds),
+    #         content=text,
+    #         proprietary=''
+    #     )
 
-        subs.append(sub)
+    #     subs.append(sub)
 
-    # 格納した情報をSRTファイルとして書き出す
-    with open(f"{basename}.srt", mode="w", encoding="utf-8") as f:
-        f.write(srt.compose(subs))
+    # # 格納した情報をSRTファイルとして書き出し
+    # with open(f"{basename}.srt", mode="w", encoding="utf-8") as f:
+    #     f.write(srt.compose(subs))
 
-    # SRTファイルから必要な情報だけ取り出してtxtファイルで保存する
-    subrip = pysrt.open(f"{basename}.srt")
-    f_out = open(f"{basename}_speech_recognitioned.txt", mode="w", encoding="utf-8")
+    # # SRTファイルから必要な情報だけ取り出してtxtファイルに保存
+    # subrip = pysrt.open(f"{basename}.srt")
 
-    # テキスト（IDとタイムスタンプ無し）
-    for sub in subrip:
-        f_out.write(sub.text + '\n')
+    # print("subrip = ", subrip)
 
-    # タイムスタンプ、テキスト（ID無し）
-    # for sub in subrip:
-    #   f_out.write(str(sub.start) + ' --> ' + str(sub.end) + '\n')
-    #   f_out.write(sub.text + '\n')
+    # with open(f"{basename}.txt", mode="w", encoding="utf-8") as f_out:
+
+    #     for sub in subrip:
+    #         print("sub.text = ", sub.text)
+    #         f_out.write(sub.text + '\n')
+
+    save_recognition_result_to_srt_and_txt_file(segments)
