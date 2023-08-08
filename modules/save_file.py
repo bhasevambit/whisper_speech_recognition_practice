@@ -20,12 +20,14 @@ def save_recognition_result_to_srt_and_txt_file(segments):
     if not os.path.isdir(dirname):
         os.mkdir(dirname)
 
+    # 拡張子無しファイル名の設定
     filename = dirname + 'speech_recognition_' + \
         now.strftime('%Y%m%d_%H%M%S')
 
-    # === srtファイルとして保存 ===
-    # segmentsの中から、id, start, end, textを取得
+    # === srtファイルとして音声認識結果を保存 ===
     subs = []
+
+    # segmentsの中から、id, start, end, textを取得
     for data in segments:
         start = data["start"]
         end = data["end"]
@@ -33,13 +35,18 @@ def save_recognition_result_to_srt_and_txt_file(segments):
 
         # SRTモジュールのSubtitle関数を用いて情報を格納
         sub = srt.Subtitle(
-            index=1, start=datetime.timedelta(
-                seconds=datetime.timedelta(
-                    seconds=start).seconds, microseconds=datetime.timedelta(
-                    seconds=start).microseconds), end=datetime.timedelta(
-                seconds=datetime.timedelta(
-                    seconds=end).seconds, microseconds=datetime.timedelta(
-                    seconds=end).microseconds), content=text, proprietary='')
+            index=1,
+            start=datetime.timedelta(
+                seconds=datetime.timedelta(seconds=start).seconds,
+                microseconds=datetime.timedelta(seconds=start).microseconds
+            ),
+            end=datetime.timedelta(
+                seconds=datetime.timedelta(seconds=end).seconds,
+                microseconds=datetime.timedelta(seconds=end).microseconds
+            ),
+            content=text,
+            proprietary=''
+        )
 
         subs.append(sub)
 
@@ -47,15 +54,12 @@ def save_recognition_result_to_srt_and_txt_file(segments):
     with open(f"{filename}.srt", mode="w", encoding="utf-8") as f:
         f.write(srt.compose(subs))
 
-    # SRTファイルから必要な情報だけ取り出してtxtファイルに保存
+    # === SRTファイルから音声認識テキスト結果のみを抽出しtxtファイルに保存 ===
     subrip = pysrt.open(f"{filename}.srt")
-
-    print("subrip = ", subrip)
 
     with open(f"{filename}.txt", mode="w", encoding="utf-8") as f_out:
 
         for sub in subrip:
-            print("sub.text = ", sub.text)
             f_out.write(sub.text + '\n')
 
     print("File Save END\n")
