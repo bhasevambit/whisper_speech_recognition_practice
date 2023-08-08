@@ -1,21 +1,25 @@
+import torch
+import whisper
+from modules.save_file import save_recognition_result_to_srt_and_txt_file
 from submodules.pyaudio_audio_signal_processing_training.modules.audio_stream import (
     audio_stream_start, audio_stream_stop)
-from submodules.pyaudio_audio_signal_processing_training.modules.gen_freq_domain_data import \
-    gen_freq_domain_data
-from submodules.pyaudio_audio_signal_processing_training.modules.gen_quef_domain_data import \
-    gen_quef_domain_data
+# from submodules.pyaudio_audio_signal_processing_training.modules.gen_freq_domain_data import \
+#     gen_freq_domain_data
+# from submodules.pyaudio_audio_signal_processing_training.modules.gen_quef_domain_data import \
+#     gen_quef_domain_data
 from submodules.pyaudio_audio_signal_processing_training.modules.gen_time_domain_data import \
     gen_time_domain_data
 from submodules.pyaudio_audio_signal_processing_training.modules.get_mic_index import \
     get_mic_index
-from submodules.pyaudio_audio_signal_processing_training.modules.get_std_input import \
-    get_selected_mode_by_std_input
-from submodules.pyaudio_audio_signal_processing_training.modules.plot_matplot_graph import (
-    gen_graph_figure_for_cepstrum, plot_time_and_quef)
+# from submodules.pyaudio_audio_signal_processing_training.modules.get_std_input import (
+#     get_selected_mode_by_std_input, get_strings_by_std_input)
+# from submodules.pyaudio_audio_signal_processing_training.modules.plot_matplot_graph import (
+#     gen_graph_figure_for_cepstrum, plot_time_and_quef)
 from submodules.pyaudio_audio_signal_processing_training.modules.save_audio_to_wav_file import \
     save_audio_to_wav_file
-from submodules.pyaudio_audio_signal_processing_training.modules.save_matplot_graph import \
-    save_matplot_graph
+
+# from submodules.pyaudio_audio_signal_processing_training.modules.save_matplot_graph import \
+#     save_matplot_graph
 
 if __name__ == '__main__':
     # =================
@@ -23,17 +27,18 @@ if __name__ == '__main__':
     # =================
 
     # --- Parameters ---
-    # 動作モード (0:レコーディングモード / 1:リアルタイムモード)
-    # (標準入力にて変更可能とする)
-    print("")
-    print("=================================================================")
-    print("  [ Please INPUT MODE type ]")
-    print("")
-    print("  0 : Recording MODE")
-    print("  1 : Real-Time MODE")
-    print("=================================================================")
-    print("")
-    selected_mode = get_selected_mode_by_std_input(mode_count=2)
+    # # 動作モード (0:レコーディングモード / 1:リアルタイムモード)
+    # # (標準入力にて変更可能とする)
+    # print("")
+    # print("=================================================================")
+    # print("  [ Please INPUT MODE type ]")
+    # print("")
+    # print("  0 : Recording MODE")
+    # print("  1 : Real-Time MODE")
+    # print("=================================================================")
+    # print("")
+    # selected_mode = get_selected_mode_by_std_input(mode_count=2)
+    selected_mode = 0   # レコーディングモード固定とする
 
     if selected_mode == 0:
         selected_mode_name = "'Recording MODE'"
@@ -83,18 +88,14 @@ if __name__ == '__main__':
 
     # グラフ保存時のファイル名プレフィックス
     filename_prefix = "time-waveform_and_Cepstrum_"
+
+    # 音声認識における音声ファイルの言語設定 (ja=日本語)
+    lang = "ja"
     # ------------------------
 
     # === マイクチャンネルを自動取得 ===
     index = get_mic_index()[0]
     print("Use Microphone Index :", index, "\n")
-
-    # === グラフ領域作成 ===
-    # (リアルタイムモード向けグラフ描画のためにMain Codeでの生成が必須)
-    fig, wave_fig, freq_fig, ceps_fig = gen_graph_figure_for_cepstrum()
-    # fig       : 生成したmatplotlib figureインスタンス
-    # wave_fig  : 時間領域波形向けmatplotlib Axesインスタンス
-    # ceps_fig  : ケプストラム向けmatplotlib Axesインスタンス
 
     # === Microphone入力音声ストリーム生成 ===
     pa, stream = audio_stream_start(
@@ -115,42 +116,6 @@ if __name__ == '__main__':
             # data_normalized : 時間領域波形データ(正規化済)
             # time_normalized : 時間領域波形データ(正規化済)に対応した時間軸データ
 
-            # === 周波数特性データ生成 ===
-            spectrum_normalized, amp_normalized, phase_normalized, freq_normalized = gen_freq_domain_data(
-                data_normalized, samplerate, dbref, A)
-            # spectrum_normalized   : 正規化後 DFTデータ 1次元配列
-            # amp_normalized        : 正規化後 DFTデータ振幅成分 1次元配列
-            # phase_normalized      : 正規化後 DFTデータ位相成分 1次元配列
-            # freq_normalized       : 正規化後 周波数軸データ 1次元配列
-
-            # === ケプストラムデータ生成 ===
-            amp_envelope_normalized, cepstrum_data, cepstrum_data_lpl = gen_quef_domain_data(
-                data_normalized, samplerate, dbref)
-            # amp_envelope_normalized   : 正規化後 スペクトル包絡データ振幅成分 1次元配列
-            # cepstrum_data             : ケプストラムデータ(対数値)[dB] 1次元配列
-            # cepstrum_data_lpl         : LPL(=Low-Pass-Lifter)適用後
-            # ケプストラムデータ(対数値)[dB] 1次元配列
-
-            # === グラフ表示 ===
-            plot_time_and_quef(
-                fig,
-                wave_fig,
-                freq_fig,
-                ceps_fig,
-                data_normalized,
-                time_normalized,
-                time_range,
-                amp_normalized,
-                amp_envelope_normalized,
-                freq_normalized,
-                freq_range,
-                cepstrum_data,
-                cepstrum_data_lpl,
-                dbref,
-                A,
-                selected_mode
-            )
-
             if selected_mode == 0:
                 # レコーディングモードの場合、While処理を1回で抜ける
                 break
@@ -163,13 +128,48 @@ if __name__ == '__main__':
         # レコーディングモードの場合、音声およびグラフを保存する
 
         # === レコーディング音声のwavファイル保存 ===
-        save_audio_to_wav_file(samplerate, data_normalized)
-
-        # === グラフ保存 ===
-        save_matplot_graph(filename_prefix)
+        audio_file_name = save_audio_to_wav_file(samplerate, data_normalized)
+        print("audio_file_name = ", audio_file_name)
+        print("")
 
     # === Microphone入力音声ストリーム停止 ===
     audio_stream_stop(pa, stream)
+
+    # CPUで処理させる場合は，このコメントアウトを外す
+    torch.cuda.is_available = lambda: False
+
+    # === モデルサイズの指定 ===
+    # -----------------------------------------------------------------------------------
+    # Size 	 | Parameters | English-only | Multilingual | Required VRAM | Relative speed
+    # tiny 	 |  39 M 	  |   tiny.en 	 |    tiny 	    |     ~1 GB 	|    ~32x
+    # base 	 |  74 M 	  |   base.en 	 |    base 	    |     ~1 GB 	|    ~16x
+    # small  |  244 M 	  |   small.en 	 |    small 	|     ~2 GB 	|    ~6x
+    # medium |  769 M 	  |   medium.en  |	  medium 	|     ~5 GB 	|    ~2x
+    # large  |  1550 M 	  |   N/A 	     |    large 	|     ~10 GB 	|     1x
+    # -----------------------------------------------------------------------------------
+    model = whisper.load_model("small")
+
+    # === Audioデータファイルの読み込み ===
+    audio = whisper.load_audio(file=audio_file_name)
+
+    # === 音声認識の実行 ===
+    result = model.transcribe(audio, verbose=True, language=lang)
+    segments = result["segments"]
+    # (出力は"text"か"segments"を選択可能)
+    # (タイムスタンプにも対応可能な"segments"を使用)
+
+    # === 音声認識結果の標準出力 ===
+    # 標準出力として、id毎に改行して表示
+    print("")
+    print("--- Speech Recognition Results ---")
+    for seg in segments:
+        id, start, end, text = [seg[key] for key in ["id", "start", "end", "text"]]
+        print(f"{id:03}: {start:5.1f} - {end:5.1f} | {text}")
+    print("----------------------------------")
+    print("")
+
+    # === 音声認識結果のファイル保存 ===
+    save_recognition_result_to_srt_and_txt_file(segments)
 
     print("=================")
     print("= Main Code END =")
