@@ -4,8 +4,8 @@ This repository is Whisper Speech-Recognition Training Test Code.
 
 ## Python Version
 
-This repository is used "**Python 3.11**" (If you use Raspberry Pi, you should use "**Python 3.7**").
-I recommend setting up "**venv**" with python version = "3.11" ( or "3.7") 
+This repository is used "**Python 3.11**".
+I recommend setting up "**venv**" with python version = "3.11". 
 venv setup is below commands.
 
 `python -m venv .venv`
@@ -15,8 +15,6 @@ venv setup is below commands.
 Please install whisper Library according to setup procedure below link.
 - <https://github.com/openai/whisper#setup>
 
-If you use Raspberry Pi, you should download below two links.
-- <https://github.com/sungjuGit/PyTorch-and-Vision-for-Raspberry-Pi-4B/blob/master/torch-1.8.0a0%2B56b43f4-cp37-cp37m-linux_armv7l.whl>
 
 ## pip Requirements
 
@@ -36,3 +34,5 @@ Please git clone at `./submodules` below repositories.
 
   - Please install `direnv` and execute `direnv allow` commands at Repository Top directory.
     (If you use Windows, please execute `.\.venv\Scripts\activate` commnads)
+
+- When using a Raspberry Pi, Whisper is not easy to install. Therefore, I recommend using whisper.cpp.

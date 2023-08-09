@@ -7,8 +7,6 @@ result/
 result/*
 *.srt
 speech_recognition_*.txt
-wheel_files/
-wheel_files/*
 
 # User modules
 pyaudio_audio_signal_processing_training
