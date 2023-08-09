@@ -23,7 +23,7 @@ Please install whisper Library according to setup procedure below link.
 
 ## Local modules
 
-Please git clone at `./modules` below repositories.
+Please git clone at `./submodules` below repositories.
 
 - <https://github.com/bhasevambit/pyaudio_audio_signal_processing_training>
 
