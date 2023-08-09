@@ -91,6 +91,14 @@ if __name__ == '__main__':
 
     # 音声認識における音声ファイルの言語設定 (ja=日本語)
     lang = "ja"
+
+    # PyTorchにて、CPUの利用を強制
+    torch.cuda.is_available = lambda: False   # 直接Falseを渡せないためlambda式で渡している
+
+    # GPU利用可否チェック
+    print("\n--- GPU available check ---")
+    print("torch.cuda.is_available() = ", torch.cuda.is_available())
+    print("---------------------------\n")
     # ------------------------
 
     # === マイクチャンネルを自動取得 ===
@@ -134,9 +142,6 @@ if __name__ == '__main__':
 
     # === Microphone入力音声ストリーム停止 ===
     audio_stream_stop(pa, stream)
-
-    # CPUで処理させる場合は，このコメントアウトを外す
-    torch.cuda.is_available = lambda: False
 
     # === モデルサイズの指定 ===
     # -----------------------------------------------------------------------------------
