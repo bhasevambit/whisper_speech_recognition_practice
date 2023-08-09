@@ -10,16 +10,16 @@ venv setup is below commands.
 
 `python -m venv .venv`
 
+## whisper Library
+
+Please install whisper Library according to setup procedure below link.
+<https://github.com/openai/whisper#setup>
+
 ## pip Requirements
 
 pip requirements install command is below.
 
 `pip install -r ./requirements.txt`
-
-## whisper Library
-
-Please install whisper Library according to setup procedure below link.
-<https://github.com/openai/whisper#setup>
 
 ## Local modules
 
