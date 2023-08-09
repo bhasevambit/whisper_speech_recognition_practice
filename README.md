@@ -10,7 +10,7 @@ venv setup is below commands.
 
 `python -m venv .venv`
 
-## whisper Library
+## whisper Library install
 
 Please install whisper Library according to setup procedure below link.
 <https://github.com/openai/whisper#setup>
