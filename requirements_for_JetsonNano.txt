@@ -1,0 +1,5 @@
+Cython==3.0.0
+dataclasses==0.8
+numpy==1.19.5
+torch @ file:///home/vinlandmbit/sound_source_localization/whisper_speech_recognition_training/wheel_files/torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+typing_extensions==4.1.1
