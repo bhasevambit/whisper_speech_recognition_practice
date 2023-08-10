@@ -35,4 +35,4 @@ Please git clone at `./submodules` below repositories.
   - Please install `direnv` and execute `direnv allow` commands at Repository Top directory.
     (If you use Windows, please execute `.\.venv\Scripts\activate` commnads)
 
-- When using a Raspberry Pi, Whisper is not easy to install. Therefore, I recommend using whisper.cpp.
+- When using a Raspberry Pi or Jetson Nano, Whisper is not easy to install. Therefore, I recommend using whisper.cpp.
