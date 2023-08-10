@@ -93,8 +93,10 @@ if __name__ == '__main__':
     lang = "ja"
 
     # PyTorchにて、CPUの利用を強制
-    torch.cuda.is_available = lambda: False   # 直接Falseを渡せないためlambda式で渡している
-    float_mode = False  # (True:GPU-Mode(float16) / False:CPU-Mode(float32)
+    # torch.cuda.is_available = lambda: False   # 直接Falseを渡せないためlambda式で渡している
+
+    # Float-Modeの設定 (True:GPU-Mode(float16) / False:CPU-Mode(float32)
+    float_mode = False
 
     # GPU利用可否チェック
     print("\n--- GPU available check ---")
