@@ -94,10 +94,12 @@ if __name__ == '__main__':
 
     # PyTorchにて、CPUの利用を強制
     torch.cuda.is_available = lambda: False   # 直接Falseを渡せないためlambda式で渡している
+    float_mode = False  # (True:GPU-Mode(float16) / False:CPU-Mode(float32)
 
     # GPU利用可否チェック
     print("\n--- GPU available check ---")
     print("torch.cuda.is_available() = ", torch.cuda.is_available())
+    print("float-Mode [True:GPU-Mode(float16) / False:CPU-Mode(float32)] = ", float_mode)
     print("---------------------------\n")
     # ------------------------
 
@@ -158,7 +160,7 @@ if __name__ == '__main__':
     audio = whisper.load_audio(file=audio_file_name)
 
     # === 音声認識の実行 ===
-    result = model.transcribe(audio, verbose=True, language=lang)
+    result = model.transcribe(audio, verbose=True, language=lang, fp16=float_mode)
     segments = result["segments"]
     # (出力は"text"か"segments"を選択可能)
     # (タイムスタンプにも対応可能な"segments"を使用)
