@@ -5,7 +5,7 @@ This repository is Whisper Speech-Recognition Training Test Code.
 ## Python Version
 
 This repository is used "**Python 3.11**".
-I recommend setting up "**venv**" with python version = "3.11". 
+I recommend setting up "**venv**" with python version = "3.11".
 venv setup is below commands.
 
 `python -m venv .venv`
@@ -13,8 +13,8 @@ venv setup is below commands.
 ## whisper Library install
 
 Please install whisper Library according to setup procedure below link.
-- <https://github.com/openai/whisper#setup>
 
+- <https://github.com/openai/whisper#setup>
 
 ## pip Requirements
 
@@ -35,4 +35,4 @@ Please git clone at `./submodules` below repositories.
   - Please install `direnv` and execute `direnv allow` commands at Repository Top directory.
     (If you use Windows, please execute `.\.venv\Scripts\activate` commnads)
 
-- When using a Raspberry Pi or Jetson Nano(JetPack), Whisper is not easy to install. Therefore, I recommend using whisper.cpp.
+- When using a **Raspberry Pi** or **Jetson Nano(JetPack)**, Whisper is not easy to install. Therefore, I recommend using whisper.cpp.
