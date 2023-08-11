@@ -3,23 +3,14 @@ import whisper
 from modules.save_file import save_recognition_result_to_srt_and_txt_file
 from submodules.pyaudio_audio_signal_processing_training.modules.audio_stream import (
     audio_stream_start, audio_stream_stop)
-# from submodules.pyaudio_audio_signal_processing_training.modules.gen_freq_domain_data import \
-#     gen_freq_domain_data
-# from submodules.pyaudio_audio_signal_processing_training.modules.gen_quef_domain_data import \
-#     gen_quef_domain_data
 from submodules.pyaudio_audio_signal_processing_training.modules.gen_time_domain_data import \
     gen_time_domain_data
 from submodules.pyaudio_audio_signal_processing_training.modules.get_mic_index import \
     get_mic_index
-# from submodules.pyaudio_audio_signal_processing_training.modules.get_std_input import (
-#     get_selected_mode_by_std_input, get_strings_by_std_input)
-# from submodules.pyaudio_audio_signal_processing_training.modules.plot_matplot_graph import (
-#     gen_graph_figure_for_cepstrum, plot_time_and_quef)
+from submodules.pyaudio_audio_signal_processing_training.modules.get_std_input import \
+    get_selected_mic_index_by_std_input
 from submodules.pyaudio_audio_signal_processing_training.modules.save_audio_to_wav_file import \
     save_audio_to_wav_file
-
-# from submodules.pyaudio_audio_signal_processing_training.modules.save_matplot_graph import \
-#     save_matplot_graph
 
 if __name__ == '__main__':
     # =================
@@ -106,12 +97,18 @@ if __name__ == '__main__':
     # ------------------
 
     # === マイクチャンネルを自動取得 ===
-    index = get_mic_index()[0]
-    print("Use Microphone Index :", index, "\n")
+    # (標準入力にて選択可能とする)
+    print("=================================================================")
+    print("  [ Please Select Microphone index ]")
+    print("=================================================================")
+    print("")
+    mic_list = get_mic_index()
+    selected_index = get_selected_mic_index_by_std_input(mic_list)
+    print("\nUse Microphone Index :", selected_index, "\n")
 
     # === Microphone入力音声ストリーム生成 ===
     pa, stream = audio_stream_start(
-        index, mic_mode, samplerate, frames_per_buffer)
+        selected_index, mic_mode, samplerate, frames_per_buffer)
     # pa        : 生成したpyaudio.PyAudioクラスオブジェクト
     #             (pyaudio.PyAudio object)
     # stream    : 生成したpyaudio.PyAudio.Streamオブジェクト
