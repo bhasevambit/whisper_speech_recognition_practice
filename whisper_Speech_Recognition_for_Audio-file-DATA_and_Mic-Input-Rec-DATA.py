@@ -96,7 +96,7 @@ if __name__ == '__main__':
         # (標準入力にて指定可能とする)
         print("")
         print("=================================================================")
-        print("  [ Please INPUT Audio Data File Name (Full-PATH) ]")
+        print("  [ Please INPUT Audio Data File Name (Relative-PATH) ]")
         print("=================================================================")
         print("")
         audio_file_name = get_strings_by_std_input()
