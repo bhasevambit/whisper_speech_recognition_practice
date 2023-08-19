@@ -1,9 +1,7 @@
 # User files
-wav/
 wav/*
 *.wav
 *.m4a
-result/
 result/*
 *.srt
 speech_recognition_*.txt
