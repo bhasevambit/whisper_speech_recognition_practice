@@ -5,6 +5,7 @@ wav/*
 result/*
 *.srt
 speech_recognition_*.txt
+.DS_Store
 
 # User modules
 pyaudio_audio_signal_processing_training
