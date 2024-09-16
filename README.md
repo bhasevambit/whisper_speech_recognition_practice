@@ -1,6 +1,6 @@
 # Whisper Speech-Recognition Practice
 
-This repository is Whisper Speech-Recognition Training Test Code.
+This repository is Whisper Speech-Recognition Practice Test Code.
 
 ## Python Version
 
