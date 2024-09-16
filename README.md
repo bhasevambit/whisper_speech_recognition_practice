@@ -1,4 +1,4 @@
-# Whisper Speech-Recognition Training
+# Whisper Speech-Recognition Practice
 
 This repository is Whisper Speech-Recognition Training Test Code.
 
